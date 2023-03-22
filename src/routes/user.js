@@ -18,14 +18,28 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try {
-        const user = await User.findById(req.params.id);
-        
-        // TODO: Check if requesting user is the same as the user being requested.
-        
-        if (!user) {
+        try {
+            const user = await User.findById(req.params.id);
+            // TODO: Check if requesting user is the same as the user being requested.
+            // If not, do not return the email address and password.
+            
+            if (!user) {
+                console.log('User with id ' + req.params.id + ' not found');
+                return res.status(404).json({ message: 'User not found' });
+            }
+            res.status(200).json({ 
+                user: {
+                    id: user._id,
+                    name: user.name,
+                    likedArticles: user.likedArticles,
+                    comments: user.comments
+                }
+             });
+        } catch (error) {
+            console.log(error);
             return res.status(404).json({ message: 'User not found' });
         }
-        res.status(200).json({ user });
+
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Internal server error' });
