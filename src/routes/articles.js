@@ -125,6 +125,10 @@ router.post('/:id/comment', auth, async (req, res) => {
         const { userId } = req;
         const articleId = req.params.id;
         const { text } = req.body;
+        // Check if text is not ascii
+        if (!/^[\x00-\x7F]*$/.test(text)) { // TODO: this is definitely not enough validation
+            return res.status(400).json({ message: 'Comment must be ascii' });
+        }
         const user = await User.findById(userId);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
@@ -137,7 +141,8 @@ router.post('/:id/comment', auth, async (req, res) => {
 
         const comment = {
             user: userId,
-            text
+            text: text,
+            createdAt: Date.now()
         };
 
         article.comments.push(comment);
@@ -147,7 +152,7 @@ router.post('/:id/comment', auth, async (req, res) => {
 
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: 'Internal server error' });
+        res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 });
 
