@@ -156,4 +156,29 @@ router.post('/:id/comment', auth, async (req, res) => {
     }
 });
 
+router.get('/search', async (req, res) => {
+    try {
+        // Get query from url parameter
+        const query = req.query.q;
+        const articles = await Article.find({
+            $text: {
+                $search: query
+            }
+        });
+
+        articles.map(article => {
+            return {
+                title: article.title,
+                id: article._id,
+                likes: article.likes
+            };
+        });
+
+        res.status(200).json({ articles });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
 module.exports = router;

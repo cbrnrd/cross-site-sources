@@ -30,4 +30,8 @@ const articleSchema = new mongoose.Schema({
     }]
 });
 
+// Add an index to the title and content fields
+articleSchema.index({ title: 'text', content: 'text' });
+
+
 module.exports = mongoose.model('Article', articleSchema);
