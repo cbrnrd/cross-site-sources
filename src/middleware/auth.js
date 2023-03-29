@@ -2,8 +2,7 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 
 const auth = (req, res, next) => {
-    // TODO: change this to something a bit more standard for JWTs
-    const token = req.header('x-auth-token');
+    const token = req.cookies.jwt;
 
     if (!token) {
         res.status(401).json({ message: 'No token, authorization denied' });
@@ -22,7 +21,7 @@ const auth = (req, res, next) => {
 };
 
 const adminAuth = (req, res, next) => {
-    const token = req.header('x-auth-token');
+    const token = req.cookies.jwt;
 
     if (!token) {
         res.status(401).json({ message: 'No token, authorization denied' });

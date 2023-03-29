@@ -29,7 +29,9 @@ router.post('/signup', async (req, res) => {
 
         const token = jwt.sign({ userId: newUser._id }, 'secret', { expiresIn: '1h' });
 
-        res.status(201).json({ token });
+        res.cookie('jwt', token, { httpOnly: true, maxAge: 1000 * 60 * 60 });
+        res.status(200).json({ token });
+        //res.status(201).json({ token });
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Internal server error' });
@@ -51,6 +53,7 @@ router.post('/login', async (req, res) => {
 
         const token = jwt.sign({ userId: user._id }, 'secret', { expiresIn: '1h' });
 
+        res.cookie('jwt', token, { httpOnly: true, maxAge: 1000 * 60 * 60 });
         res.status(200).json({ token });
 
     } catch (error) {

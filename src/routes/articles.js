@@ -225,6 +225,18 @@ router.get('/search', async (req, res) => {
         var newsApiResults = await getDailyHeadlines(query);
         for (var i = 0; i < newsApiResults.length; i++) {
             results.external.push(newsApiResults[i]);
+            try{
+                // Load external article into db if not already present
+                await Article.findOneAndUpdate({ url: newsApiResults[i].url }, {
+                    title: newsApiResults[i].title,
+                    imageUrl: newsApiResults[i].imageUrl,
+                    author: newsApiResults[i].author,
+                    content: newsApiResults[i].content,
+                }, { upsert: true });
+            } catch (error) {
+                console.log(error);
+            }
+            
         }
 
         res.status(200).json({ results });
@@ -234,6 +246,7 @@ router.get('/search', async (req, res) => {
     }
 });
 
+// Keep this last to avoid conflicts with other routes
 router.get('/:id', async (req, res) => {
     try {
         const article = await Article.findById(req.params.id);

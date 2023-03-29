@@ -4,6 +4,7 @@ import connectDB from './db.js';
 import authRouter from './routes/auth.js';
 import articlesRouter from './routes/articles.js';
 import userRouter from './routes/user.js';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 
@@ -13,6 +14,7 @@ connectDB();
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 
 // Routes
