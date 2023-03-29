@@ -1,8 +1,8 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const Article = require('../models/Article');
-const User = require('../models/User');
-const auth = require('../middleware/auth');
+import Article from '../models/Article.js';
+import User from '../models/User.js';
+import { auth, adminAuth } from '../middleware/auth.js';
 
 router.get('/', async (req, res) => {
     try {
@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.post('/', auth, async (req, res) => {
+router.post('/', adminAuth, async (req, res) => {
     try {
         const { title, content } = req.body;
         const newArticle = new Article({
@@ -32,7 +32,7 @@ router.post('/', auth, async (req, res) => {
     }
 });
 
-router.put('/:id', auth, async (req, res) => {
+router.put('/:id', adminAuth, async (req, res) => {
     try {
         const { title, content } = req.body;
         const updatedArticle = await Article.findByIdAndUpdate(req.params.id, {
@@ -48,7 +48,7 @@ router.put('/:id', auth, async (req, res) => {
     }
 });
 
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', adminAuth, async (req, res) => {
     try {
         await Article.findByIdAndDelete(req.params.id);
         res.status(200).json({ message: 'Article deleted' });
@@ -181,4 +181,4 @@ router.get('/search', async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;

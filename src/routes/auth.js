@@ -1,8 +1,8 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
 
 router.post('/signup', async (req, res) => {
     try {
@@ -21,7 +21,8 @@ router.post('/signup', async (req, res) => {
             name,
             email,
             password: hashedPassword,
-            salt: salt
+            salt: salt,
+            role: 'user'
         });
 
         await newUser.save();
@@ -58,4 +59,4 @@ router.post('/login', async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;

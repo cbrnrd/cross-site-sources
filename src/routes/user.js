@@ -1,8 +1,8 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const Article = require('../models/Article');
-const User = require('../models/User');
-const auth = require('../middleware/auth');
+import Article from '../models/Article.js';
+import User from '../models/User.js';
+import { auth } from '../middleware/auth.js';
 
 // Routes relating to users. These are the routes that are used to create, view, and update users.
 
@@ -81,4 +81,4 @@ router.get('/:id/articles', async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;
