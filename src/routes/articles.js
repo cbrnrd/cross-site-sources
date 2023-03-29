@@ -7,7 +7,7 @@ import { getDailyHeadlines } from '../newsapi.js';
 
 router.get('/', async (req, res) => {
     try {
-        const internalArticles = await Article.find();
+        const internalArticles = await Article.find().sort({ createdAt: -1 });
         res.status(200).json({ internalArticles });
     } catch (error) {
         console.log(error);

@@ -9,7 +9,7 @@ services:
     depends_on:
       - db
   db:
-    image: mongo:latest  # Change to latest if not on M1 mac, or CPU without AVX
+    image: mongo:4.4.4  # Change to latest if not on M1 mac, or CPU without AVX. Use 4.4.4 if on M1 mac
     restart: always
     container_name: cross-site-sources-db
     environment:

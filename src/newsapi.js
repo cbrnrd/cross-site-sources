@@ -35,7 +35,7 @@ function getEverythingMatching(query, pageSize = 10) {
  * @param {Number} numToGet The number of headlines to get
  * @return {Promise} A promise that resolves to an array of articles
  */
-async function getDailyHeadlines(q='cybersecurity', numToGet = 10) {
+async function getDailyHeadlines({ numToGet = 10, q = 'security' }) {
 
     return newsapi.v2.topHeadlines({
         language: 'en',
@@ -45,7 +45,7 @@ async function getDailyHeadlines(q='cybersecurity', numToGet = 10) {
         pageSize: numToGet,
     }).then(response => {
         var results = response.articles;
-        console.log(results);
+        //console.log(results);
         var converted = [];
         for (var i = 0; i < results.length; i++) {
             converted.push(convertArticle(results[i]));
