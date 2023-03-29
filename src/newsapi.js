@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv';
 import NewsAPI from 'newsapi';
-import { Article } from './models/article.js';
+import Article from './models/Article.js';
 
 dotenv.config();
 
@@ -33,21 +33,25 @@ function getEverythingMatching(query, pageSize = 10) {
 /**
  * Get the top headlines from the NewsAPI
  * @param {Number} numToGet The number of headlines to get
+ * @return {Promise} A promise that resolves to an array of articles
  */
-function getDailyHeadlines(q='cybersecurity', numToGet = 3) {
+async function getDailyHeadlines(q='cybersecurity', numToGet = 10) {
 
-    newsapi.v2.topHeadlines({
+    return newsapi.v2.topHeadlines({
         language: 'en',
         category: 'technology',
+        country: 'us',
         q: q,
         pageSize: numToGet,
     }).then(response => {
-        return response.articles;
-    }).catch(error => {
-        console.log(error);
+        var results = response.articles;
+        console.log(results);
+        var converted = [];
+        for (var i = 0; i < results.length; i++) {
+            converted.push(convertArticle(results[i]));
+        }
+        return converted;
     });
-
-    return [];
 }
 
 /**

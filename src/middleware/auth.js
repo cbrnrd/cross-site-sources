@@ -6,7 +6,8 @@ const auth = (req, res, next) => {
     const token = req.header('x-auth-token');
 
     if (!token) {
-        return res.status(401).json({ message: 'No token, authorization denied' });
+        res.status(401).json({ message: 'No token, authorization denied' });
+        return;
     }
 
     try {
@@ -24,19 +25,22 @@ const adminAuth = (req, res, next) => {
     const token = req.header('x-auth-token');
 
     if (!token) {
-        return res.status(401).json({ message: 'No token, authorization denied' });
+        res.status(401).json({ message: 'No token, authorization denied' });
+        return;
     }
 
     try {
         const decoded = jwt.verify(token, 'secret');
+        var isAdmin = false;
         User.findById(decoded.userId).then(user => {
-
-            if (!user.isAdmin()) {
-                return res.status(401).json({ message: 'Unauthorized' });
+            isAdmin = user.role === 'admin';
+            if (!isAdmin) {
+                res.status(401).json({ message: 'Not authorized' });
+                return;
             }
-
+            req.userId = decoded.userId;
+            next();
         });
-        next();
 
     } catch (error) {
         console.log(error);

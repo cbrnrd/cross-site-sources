@@ -42,12 +42,7 @@ const articleSchema = new mongoose.Schema({
     }]
 });
 
-<<<<<<< Updated upstream
 // Add an index to the title and content fields
 articleSchema.index({ title: 'text', content: 'text' });
 
-
-module.exports = mongoose.model('Article', articleSchema);
-=======
 export default mongoose.model('Article', articleSchema);
->>>>>>> Stashed changes
