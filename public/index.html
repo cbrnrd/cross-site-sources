@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cybersecurity News Aggregator</title>
+    <!-- Tailwind CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body class="bg-gray-100">
+    <!-- Navigation Bar -->
+    <nav class="bg-blue-500 text-white px-4 py-3">
+        <div class="flex justify-between items-center">
+            <a href="#" class="text-lg font-bold">Cybersecurity News Aggregator</a>
+            <ul class="flex">
+                <li><a href="#" class="ml-4">Home</a></li>
+                <li><a href="#" class="ml-4">About</a></li>
+                <li><a href="#" class="ml-4">Contact Us</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Search Bar -->
+    <div class="max-w-3xl mx-auto mt-4 mb-8">
+        <form class="flex items-center">
+            <input type="text" placeholder="Search articles"
+                class="border border-gray-400 px-4 py-2 rounded-l-lg w-full" />
+            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-r-lg"><i
+                    class="fas fa-search"></i></button>
+        </form>
+    </div>
+
+    <!-- Article Cards -->
+    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="bg-white rounded-lg shadow-md p-4">
+            <h2 class="font-bold text-lg mb-2">Title of the Article</h2>
+            <p class="text-gray-600 text-sm mb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vitae
+                arcu sed nulla venenatis euismod.</p>
+            <div class="flex items-center justify-between">
+                <p class="text-gray-400 text-xs">3 likes</p>
+                <button class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded-md"><i
+                        class="far fa-thumbs-up"></i> Like</button>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg shadow-md p-4">
+            <h2 class="font-bold text-lg mb-2">Title of the Article</h2>
+            <p class="text-gray-600 text-sm mb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vitae
+                arcu sed nulla venenatis euismod.</p>
+            <div class="flex items-center justify-between">
+                <p class="text-gray-400 text-xs">5 likes</p>
+                <button class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded-md"><i
+                        class="far fa-thumbs-up"></i> Like</button>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg shadow-md p-4">
+            <h2 class="font-bold text-lg mb-2">Title of the Article</h2>
+            <p class="text-gray-600 text-sm mb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vitae
+                arcu sed nulla venenatis euismod.</p>
+            <div class="flex items-center justify-between">
+                <p class="text-gray-400 text-xs">2 likes</p>
+                <button class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded-md"><i
+                        class="far fa-thumbs-up"></i> Like</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-gray-200 py-4">
+        <div class="max-w-6xl mx-auto text-center">
+            <p class="text-gray-600 text-sm">&copy; 2023 Cybersecurity News Aggregator. All Rights Reserved.</p>
+            <ul class="flex justify-center mt-4">
+                <li><a href="#" class="text-blue-500 hover:text-blue-600 mx-4"><i class="fab fa-twitter"></i></a></li>
+                <li><a href="#" class="text-blue-500 hover:text-blue-600 mx-4"><i class="fab fa-facebook"></i></a></li>
+                <li><a href="#" class="text-blue-500 hover:text-blue-600 mx-4"><i class="fab fa-instagram"></i></a></li>
+                <li><a href="#" class="text-blue-500 hover:text-blue-600 mx-4"><i class="fab fa-linkedin"></i></a></li>
+            </ul>
+        </div>
+    </footer>
+
+</body>
+
+</html>
