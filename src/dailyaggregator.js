@@ -6,7 +6,7 @@ import { getDailyHeadlines } from "./newsapi.js";
 import Article from "./models/Article.js";
 
 // Every 4 hours, pull 4 headlines from the API and store them in the database
-function startDailyAggregator({ hours = 4 }) {
+function startDailyAggregator({ hours }) {
   setInterval(async () => {
     console.log("Aggregating headlines...");
     const headlines = await getDailyHeadlines({ numToGet: 4 });
