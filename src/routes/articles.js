@@ -7,7 +7,10 @@ import { getDailyHeadlines } from '../newsapi.js';
 
 router.get('/', async (req, res) => {
     try {
-        const internalArticles = await Article.find().sort({ createdAt: -1 });
+        // Get n parameter
+        const n = req.query.n || 20;
+        const internalArticles = await Article.find().sort({ createdAt: -1 }).limit(n);
+        console.log("Articles fetched")
         res.status(200).json({ internalArticles });
     } catch (error) {
         console.log(error);

@@ -19,9 +19,11 @@ router.get('/', adminAuth, async (req, res) => {
 router.get('/:id', auth, async (req, res) => {
     try {
 
-        const user = await User.findById(req.params.id);
-        // TODO: Check if requesting user is the same as the user being requested.
-        // If not, do not return the email address and password.
+        if (req.params.id === 'me') {
+            const user = await User.findById(req.userId);
+        } else {
+            const user = await User.findById(req.params.id);
+        }
 
         if (!user) {
             console.log('User with id ' + req.params.id + ' not found');
