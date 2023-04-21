@@ -183,10 +183,12 @@ router.post('/comment', auth, async (req, res) => {
 
         const comment = {
             user: userId,
+            username: user.name,
             text: text,
             createdAt: Date.now()
         };
 
+        console.log(comment);
         article.comments.push(comment);
         await article.save();
 

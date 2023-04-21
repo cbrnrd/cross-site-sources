@@ -31,6 +31,10 @@ const articleSchema = new mongoose.Schema({
             ref: 'User',
             required: true
         },
+        username: {
+            type: String,
+            required: false
+        },
         text: {
             type: String,
             required: true
