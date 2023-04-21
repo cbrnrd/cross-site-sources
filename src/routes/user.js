@@ -19,12 +19,8 @@ router.get('/', adminAuth, async (req, res) => {
 router.get('/:id', auth, async (req, res) => {
     try {
 
-        if (req.params.id === 'me') {
-            const user = await User.findById(req.userId);
-        } else {
-            const user = await User.findById(req.params.id);
-        }
-
+        const user = await User.findById(req.params.id);
+        
         if (!user) {
             console.log('User with id ' + req.params.id + ' not found');
             return res.status(404).json({ message: 'User not found' });
