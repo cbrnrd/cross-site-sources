@@ -30,6 +30,6 @@ app.use('/api/user', userRouter);
 const PORT = process.env.PORT || 5000;
 
 // Start automatic aggregator
-startDailyAggregator({hours: 4});
+startDailyAggregator({hours: .25});
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));

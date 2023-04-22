@@ -20,7 +20,7 @@ router.get('/:id', auth, async (req, res) => {
     try {
 
         const user = await User.findById(req.params.id);
-        
+        console.log("user:: ", user.name);
         if (!user) {
             console.log('User with id ' + req.params.id + ' not found');
             return res.status(404).json({ message: 'User not found' });
@@ -55,6 +55,26 @@ router.get('/:id', auth, async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
+
+// Route to update a user's email
+router.post('/:id', auth, async (req, res) => {
+    try {
+        const {userId, newEmail} = req.body
+        const user = await User.findOne({userId})
+        console.log("userId:: ", userId)
+        console.log("newEmail:: ", newEmail)
+
+        if (!user) {
+            return res.status(400).json({ message: 'User does not exist'});
+        }
+        user.email = newEmail
+        await user.save();
+        res.status(200).json({message: "Email successfully updated"});
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({ message: 'Internal server error' });
+    }
+})
 
 router.delete('/:id', auth, async (req, res) => {
     try {
