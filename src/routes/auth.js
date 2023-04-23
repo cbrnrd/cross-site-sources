@@ -32,7 +32,7 @@ router.post('/signup', async (req, res) => {
 
         await newUser.save();
 
-        const token = jwt.sign({ userId: newUser._id }, 'secret', { expiresIn: '1h' });
+        const token = jwt.sign({ userId: newUser._id, role: newUser.role }, 'secret', { expiresIn: '1h' });
 
         res.cookie('jwt', token, { httpOnly: true, maxAge: 1000 * 60 * 60 });
         res.status(200).json({ token });
