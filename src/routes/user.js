@@ -57,7 +57,7 @@ router.get('/:id', auth, async (req, res) => {
 });
 
 // Route to update a user's email
-router.post('/:id', auth, async (req, res) => {
+router.post('/changeemail', async (req, res) => {
     try {
         const {userId, newEmail} = req.body
         const user = await User.findOne({userId})
