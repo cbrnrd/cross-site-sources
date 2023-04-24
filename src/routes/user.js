@@ -6,7 +6,7 @@ import { auth, adminAuth } from '../middleware/auth.js';
 
 // Routes relating to users. These are the routes that are used to create, view, and update users.
 
-router.get('/', adminAuth, async (req, res) => {
+router.get('/', auth, async (req, res) => {
     try {
         const users = await User.find();
         res.status(200).json({ users });
@@ -57,17 +57,17 @@ router.get('/:id', auth, async (req, res) => {
 });
 
 // Route to update a user's email
-router.post('/changeemail', async (req, res) => {
+router.post('/changeemail', auth, async (req, res) => {
     try {
-        const {userId, newEmail} = req.body
-        const user = await User.findOne({userId})
+        const {userId, email} = req.body
+        const user = await User.findById(userId)
         console.log("userId:: ", userId)
-        console.log("newEmail:: ", newEmail)
+        console.log("newEmail:: ", email)
 
         if (!user) {
             return res.status(400).json({ message: 'User does not exist'});
         }
-        user.email = newEmail
+        user.email = email
         await user.save();
         res.status(200).json({message: "Email successfully updated"});
     } catch (err) {
