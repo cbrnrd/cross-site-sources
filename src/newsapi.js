@@ -13,21 +13,19 @@ const newsapi = new NewsAPI(API_KEY);
  * @param {String} query The query to search for
  * @param {Number} pageSize The number of articles to return
  */
-function getEverythingMatching(query, pageSize = 10) {
+async function getEverythingMatching(query, pageSize = 10) {
     // 3/28, this endpoint seems to be broken on the API side
-    newsapi.v2.everything({
+    return newsapi.v2.everything({
         q: query,
         language: 'en',
-        category: 'cybersecurity',
         sortBy: 'relevancy',
         pageSize: pageSize,
     }).then(response => {
         return response.articles;
     }).catch(error => {
         console.log(error);
+        return [];
     });
-
-    return [];
 }
 
 /**

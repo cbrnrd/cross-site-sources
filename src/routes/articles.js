@@ -3,7 +3,7 @@ const router = express.Router();
 import Article from '../models/Article.js';
 import User from '../models/User.js';
 import { auth, adminAuth } from '../middleware/auth.js';
-import { getDailyHeadlines } from '../newsapi.js';
+import { getDailyHeadlines, getEverythingMatching } from '../newsapi.js';
 
 router.get('/', async (req, res) => {
     try {
@@ -227,7 +227,9 @@ router.get('/search', async (req, res) => {
         // });
 
         // TODO: change to everything endpoint
-        var newsApiResults = await getDailyHeadlines(query);
+        var newsApiResults = await getEverythingMatching(query);
+
+        console.log(newsApiResults)
         for (var i = 0; i < newsApiResults.length; i++) {
             results.external.push(newsApiResults[i]);
             try{
