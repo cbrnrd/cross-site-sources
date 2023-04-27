@@ -189,7 +189,7 @@ router.post('/comment', auth, async (req, res) => {
             user: userId,
             text: text,
             username: user.name,
-            //article: articleId
+            articleId: articleId
         });
         await comment.save();
         console.log(comment);
@@ -211,25 +211,41 @@ router.delete('/comment/:id', auth, async (req, res) => {
         const commentId = req.params.id;
 
         // Check if user is admin or comment author
-        const user = User.findById(userId);
+        const user = await User.findById(userId);
+
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        if (!user.isAdmin) {
+        const comment = await Comment.findById(commentId);
 
-            const comment = Comment.findById(commentId);
+        if (!comment) {
+            return res.status(404).json({ message: 'Comment not found' });
+        }
 
-            if (!comment) {
-                return res.status(404).json({ message: 'Comment not found' });
-            }
+        const articleId = comment.articleId;
+        const article = await Article.findById(articleId);
+
+        if (user.role !== 'admin') {
+            console.log(user)
+            console.log(user.role)
+            console.log('User is not admin, checking if user is comment author')
 
             if (comment.user !== userId) {
                 return res.status(403).json({ message: 'Unauthorized' });
             }
         }
 
-        Comment.findByIdAndDelete(commentId);
+        // delete comment
+        await Comment.findByIdAndDelete(commentId);
+
+        // delete comment from article
+        console.log("Deleting comment with id: " + commentId + " from article with id: " + articleId);
+
+        await Article.updateOne({ _id: articleId }, { $pull: { comments: commentId } });
+        console.log("Comment deleted")
+
+
         res.status(200).json({ message: 'Comment deleted' });
 
     } catch (error) {
