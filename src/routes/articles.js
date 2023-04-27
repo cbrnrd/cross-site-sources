@@ -2,13 +2,15 @@ import express from 'express';
 const router = express.Router();
 import Article from '../models/Article.js';
 import User from '../models/User.js';
+import Comment from '../models/Comment.js';
 import { auth, adminAuth } from '../middleware/auth.js';
-import { getDailyHeadlines, getEverythingMatching } from '../newsapi.js';
+import { getDailyHeadlines, getEverythingMatching, convertArticle } from '../newsapi.js';
 
 router.get('/', async (req, res) => {
     try {
         // Get n parameter
         const n = req.query.n || 20;
+        // Get articles sorted by date (newest first)
         const internalArticles = await Article.find().sort({ createdAt: -1 }).limit(n);
         console.log("Articles fetched")
         res.status(200).json({ internalArticles });
@@ -59,6 +61,7 @@ router.put('/:id', adminAuth, async (req, res) => {
 router.delete('/:id', adminAuth, async (req, res) => {
     try {
         await Article.findByIdAndDelete(req.params.id);
+        console.log("Deleting article with id: " + req.params.id);
         res.status(200).json({ message: 'Article deleted' });
     } catch (error) {
         console.log(error);
@@ -181,13 +184,14 @@ router.post('/comment', auth, async (req, res) => {
             return res.status(404).json({ message: 'Article not found' });
         }
 
-        const comment = {
+        // Make a new Comment
+        const comment = new Comment({
             user: userId,
-            username: user.name,
             text: text,
-            createdAt: Date.now()
-        };
-
+            username: user.name,
+            //article: articleId
+        });
+        await comment.save();
         console.log(comment);
         article.comments.push(comment);
         await article.save();
@@ -197,6 +201,40 @@ router.post('/comment', auth, async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+});
+
+router.delete('/comment/:id', auth, async (req, res) => {
+    // DELETE /comment/COMMENTID=
+    try {
+        const { userId } = req;
+        const commentId = req.params.id;
+
+        // Check if user is admin or comment author
+        const user = User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        if (!user.isAdmin) {
+
+            const comment = Comment.findById(commentId);
+
+            if (!comment) {
+                return res.status(404).json({ message: 'Comment not found' });
+            }
+
+            if (comment.user !== userId) {
+                return res.status(403).json({ message: 'Unauthorized' });
+            }
+        }
+
+        Comment.findByIdAndDelete(commentId);
+        res.status(200).json({ message: 'Comment deleted' });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Internal server error' });
     }
 });
 
@@ -231,12 +269,21 @@ router.get('/search', async (req, res) => {
 
         console.log(newsApiResults)
         for (var i = 0; i < newsApiResults.length; i++) {
-            results.external.push(newsApiResults[i]);
+            const convertedArticle = convertArticle(newsApiResults[i]);
+            results.external.push(convertedArticle);
+            
+            // Check if article with url already exists in db, if not, add it
+            if (!(await Article.exists({ url: newsApiResults[i].url }))) {
+                console.log('Article not in db, saving...');
+                await convertedArticle.save();
+                continue;
+            } 
+
             try{
                 // Load external article into db if not already present
                 await Article.findOneAndUpdate({ url: newsApiResults[i].url }, {
                     title: newsApiResults[i].title,
-                    imageUrl: newsApiResults[i].imageUrl,
+                    imageUrl: newsApiResults[i].urlToImage,
                     author: newsApiResults[i].author,
                     content: newsApiResults[i].content,
                 }, { upsert: true });
@@ -260,6 +307,15 @@ router.get('/:id', async (req, res) => {
         if (!article) {
             return res.status(404).json({ message: 'Article not found' });
         }
+
+        const articleComments = []
+        for (var i = 0; i < article.comments.length; i++) {
+            const comment = await Comment.findById(article.comments[i]);
+            articleComments.push(comment);
+        }
+
+        article.comments = articleComments;
+
         res.status(200).json({ article });
     } catch (error) {
         console.log(error);

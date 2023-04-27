@@ -16,6 +16,7 @@ const connectDB = async () => {
 
         // Print db stats
         const dbStats = await mongoose.connection.db.stats();
+        console.log(`MongoDB stats: ${JSON.stringify(dbStats)}`);
     } catch (error) {
         console.log(error);
         process.exit(1);

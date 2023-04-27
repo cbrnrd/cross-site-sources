@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import commentSchema from "./Comment.js";
+const Schema = mongoose.Schema;
 
 const articleSchema = new mongoose.Schema({
     title: {
@@ -7,7 +9,7 @@ const articleSchema = new mongoose.Schema({
     },
     author: {
         type: String,
-        required: true
+        required: false
     },
     content: {
         type: String,
@@ -25,25 +27,7 @@ const articleSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    comments: [{
-        user: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
-            required: true
-        },
-        username: {
-            type: String,
-            required: false
-        },
-        text: {
-            type: String,
-            required: true
-        },
-        createdAt: {
-            type: Date,
-            default: Date.now
-        }
-    }]
+    comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
 });
 
 // Add an index to the title and content fields
