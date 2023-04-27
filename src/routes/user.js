@@ -3,6 +3,7 @@ const router = express.Router();
 import Article from '../models/Article.js';
 import User from '../models/User.js';
 import { auth, adminAuth } from '../middleware/auth.js';
+import bcrypt from "bcryptjs";
 
 // Routes relating to users. These are the routes that are used to create, view, and update users.
 
@@ -73,6 +74,32 @@ router.post('/changeemail', auth, async (req, res) => {
     } catch (err) {
         console.log(err)
         res.status(500).json({ message: 'Internal server error' });
+    }
+})
+
+//Route to update a user's password
+router.post('/changepassword', auth, async (req, res) => {
+    try {
+        const {userId, newpassword} = req.body
+        const user = await User.findById(userId)
+        console.log("userId:: ", userId)
+        //BE SURE TO DELETE AFTER TESTING
+        console.log("newPassword:: ", newpassword)
+
+        if (!user) {
+            return res.status(400).json({message: 'User does not exist'});
+        }
+
+        const salt = await bcrypt.genSalt(10);
+
+        const hashedPassword = await bcrypt.hash(newpassword, salt);
+
+        user.password = hashedPassword;
+        user.salt = salt;
+        res.status(200).json({message: 'Password successfully updated'})
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message: 'Internal server error'})
     }
 })
 
