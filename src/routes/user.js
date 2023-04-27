@@ -80,11 +80,8 @@ router.post('/changeemail', auth, async (req, res) => {
 //Route to update a user's password
 router.post('/changepassword', auth, async (req, res) => {
     try {
-        const {userId, newpassword} = req.body
+        const {userId, newPassword} = req.body
         const user = await User.findById(userId)
-        console.log("userId:: ", userId)
-        //BE SURE TO DELETE AFTER TESTING
-        console.log("newPassword:: ", newpassword)
 
         if (!user) {
             return res.status(400).json({message: 'User does not exist'});
@@ -92,10 +89,11 @@ router.post('/changepassword', auth, async (req, res) => {
 
         const salt = await bcrypt.genSalt(10);
 
-        const hashedPassword = await bcrypt.hash(newpassword, salt);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
 
         user.password = hashedPassword;
         user.salt = salt;
+        await user.save();
         res.status(200).json({message: 'Password successfully updated'})
     } catch (err) {
         console.log(err)
