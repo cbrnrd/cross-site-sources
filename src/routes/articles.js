@@ -101,6 +101,22 @@ router.post('/like', auth, async (req, res) => {
     }
 });
 
+router.get('/liked', auth, async (req, res) => {
+    try{
+
+        const user = await User.findById(req.userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const articles = await Article.find({ _id: { $in: user.likedArticles } });
+        res.status(200).json({ articles });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
 // /unlike?id=1234
 router.post('/unlike', auth, async (req, res) => {
     try {
