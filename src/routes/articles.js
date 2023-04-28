@@ -106,7 +106,8 @@ router.post('/unlike', auth, async (req, res) => {
     try {
         const { userId } = req;
         const articleId = req.query.id;
-        const user = await user.findById(userId);
+        console.log("Unliking article with id: " + articleId)
+        const user = await User.findById(userId);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
